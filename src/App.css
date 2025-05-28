@@ -1,0 +1,30 @@
+.letter {
+	position: relative;
+	font-family: Menlo, mono-space;
+	letter-spacing: 0.15rem;
+
+	&.active::before {
+		content: '|';
+		color: rgb(251, 255, 0);
+		font-size: 1.7rem;
+		position: absolute;
+		left: -29%;
+		font-weight: bolder;
+		animation: 1.2s blink infinite ease-in-out;
+	}
+
+	&.active.is-last::before {
+		left: 75%;
+	}
+}
+
+@keyframes blink {
+	0%,
+	25% {
+		opacity: 1;
+	}
+
+	75% {
+		opacity: 0;
+	}
+}
