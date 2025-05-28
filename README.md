@@ -38,3 +38,10 @@ A sleek, responsive typing test application built with React, TypeScript, and Ta
 1. Clone the repository:
    ```bash
    git clone https://github.com/AndyNusantara/typing.git
+2. Clone the repository:
+   ```bash
+   cd react-typemaster
+   npm install
+3. Start the development server:
+   ```bash
+   npm run dev
