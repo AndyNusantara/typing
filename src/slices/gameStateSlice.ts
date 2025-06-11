@@ -30,17 +30,21 @@ export const gameState = createSlice({
 		changeCountdown: (state, action: PayloadAction<TimerState>) => {
 			state.countdown = action.payload
 		},
-		startTimer: (state) => {
+		incrementTimer: (state) => {
 			state.timer += 1
 		},
 		startCountdown: (state) => {
 			state.countdown -= 1
 		},
-		toggleTimer: (state) => {
-			state.isTimerStart = !state.isTimerStart
+		startTimer: (state) => {
+			state.isTimerStart = true
+		},
+		stopTimer: (state) => {
+			state.isTimerStart = false
 		},
 		resetTimer: (state) => {
 			state.timer = 0
+			state.isTimerStart = false
 		},
 		toggleGame: (state) => {
 			state.endGame = !state.endGame
@@ -53,8 +57,9 @@ export const gameState = createSlice({
 
 export const {
 	changeCountdown,
+	incrementTimer,
 	startTimer,
-	toggleTimer,
+	stopTimer,
 	resetTimer,
 	startCountdown,
 	toggleGame,

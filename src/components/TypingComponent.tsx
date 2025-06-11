@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import useTyping from '../hooks/useTyping'
 import { LetterState } from '../utils/types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,10 +7,12 @@ import { generateWords } from '../slices/wordsSlice'
 import { Icon } from '@iconify/react/dist/iconify.js'
 
 import '../styling/typingComponent.css'
-import { startTimer } from '../slices/gameStateSlice'
+import { incrementTimer, resetTimer, stopTimer } from '../slices/gameStateSlice'
+import { motion, AnimatePresence } from 'motion/react'
 
 const TypingComponent = () => {
 	const inputRef = useRef<HTMLInputElement>(null)
+	const [isFocus, setIsFocus] = useState<boolean>(true)
 	const isTimerStart = useSelector(
 		(state: RootState) => state.gameState.isTimerStart
 	)
@@ -47,6 +49,9 @@ const TypingComponent = () => {
 
 	const generate = useCallback(() => {
 		dispatch(generateWords())
+		dispatch(resetTimer())
+		setIsFocus(true)
+		inputRef.current?.focus()
 	}, [dispatch])
 
 	useEffect(() => {
@@ -56,7 +61,7 @@ const TypingComponent = () => {
 	useEffect(() => {
 		if (isTimerStart) {
 			const interval = setInterval(() => {
-				dispatch(startTimer())
+				dispatch(incrementTimer())
 			}, 1000)
 
 			return () => {
@@ -65,10 +70,16 @@ const TypingComponent = () => {
 		}
 	}, [isTimerStart, dispatch])
 
+	useEffect(() => {
+		if (!isFocus) {
+			dispatch(stopTimer())
+		}
+	}, [isFocus, dispatch])
+
 	return (
-		<div className="grid grid-rows-2 w-2px">
+		<div className="flex flex-col w-3/4">
 			<span className="text-yellow-500">{timer}</span>
-			<div className="grid grid-rows-2 w-20px">
+			<div className="grid grid-rows-2">
 				<div
 					className="relative w-full h-full"
 					onClick={() => {
@@ -85,9 +96,7 @@ const TypingComponent = () => {
 										return (
 											<span
 												key={letter + index}
-												className={`
-											${getLetterState(state as LetterState)}
-										`}
+												className={getLetterState(state as LetterState)}
 											>
 												{letter}
 											</span>
@@ -103,19 +112,36 @@ const TypingComponent = () => {
 						autoFocus
 						onKeyDown={onKeyDown}
 						onKeyUp={onKeyUp}
+						onFocus={() => setIsFocus(true)}
+						onBlur={() => setIsFocus(false)}
 						onChange={(e) => onInputChange(e.target.value)}
-						className="absolute top-0 left-0 text-wrap border-0 outline-hidden border-hidden opacity-0"
+						className="absolute top-0 w-full h-full border-0 outline-hidden border-hidden opacity-0"
 					/>
+					<AnimatePresence mode="wait">
+						{!isFocus && (
+							<motion.div
+								key="focus-overlay"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1, transition: { delay: 0.5 } }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.15 }}
+								className="absolute left-0 top-0 w-full h-full flex justify-center items-center backdrop-blur-xs opacity-90"
+								onClick={() => inputRef.current?.focus()}
+							>
+								Click here to focus
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
 				<div className="flex justify-center items-center w-full">
 					<button
-						title="regenerate"
+						title="Re-generate words"
 						onClick={generate}
 						className="!bg-transparent border-none focus:!outline-0 hover:!border-none !transition-none"
 					>
 						<Icon
 							icon="material-symbols:refresh-rounded"
-							className="size-8 text-slate-300"
+							className="size-8 text-slate-400"
 						/>
 					</button>
 				</div>

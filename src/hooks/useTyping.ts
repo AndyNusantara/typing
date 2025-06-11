@@ -3,7 +3,7 @@ import { LetterState } from '../utils/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { changeLetterState } from '../slices/wordsSlice'
-import { toggleGame, toggleTimer } from '../slices/gameStateSlice'
+import { toggleGame, stopTimer, startTimer } from '../slices/gameStateSlice'
 import { LETTER_STATES } from '../utils/const'
 
 type useTypingProps = {
@@ -80,7 +80,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 
 	const handleEndGame = () => {
 		dispatch(toggleGame())
-		dispatch(toggleTimer())
+		dispatch(stopTimer())
 		return
 	}
 
@@ -171,7 +171,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		setPreviousInput(value)
 
 		if (!isTimerStart && hasTyped) {
-			dispatch(toggleTimer())
+			dispatch(startTimer())
 		}
 
 		if (isExtra && inputRef.current?.value) {

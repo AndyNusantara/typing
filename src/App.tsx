@@ -17,30 +17,33 @@ const App = () => {
 	}
 
 	return (
-		<div className="flex items-center w-screen h-screen bg-zinc-700 text-3xl">
-			<AnimatePresence mode="wait">
-				{isGameEnd ? (
-					<motion.div
-						key="status"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.15 }}
-					>
-						<StatusComponent toggleStatusComponent={toggleStatusComponent} />
-					</motion.div>
-				) : (
-					<motion.div
-						key="typing"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.15 }}
-					>
-						<TypingComponent />
-					</motion.div>
-				)}
-			</AnimatePresence>
+		<div className="flex items-center justify-center w-screen h-screen bg-zinc-700 text-3xl">
+			<div className="w-full">
+				<AnimatePresence mode="wait">
+					{isGameEnd ? (
+						<motion.div
+							key="status"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.15 }}
+						>
+							<StatusComponent toggleStatusComponent={toggleStatusComponent} />
+						</motion.div>
+					) : (
+						<motion.div
+							key="typing"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.15 }}
+							className="flex justify-center items-center"
+						>
+							<TypingComponent />
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</div>
 		</div>
 	)
 }
