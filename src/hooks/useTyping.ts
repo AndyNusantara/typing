@@ -1,8 +1,12 @@
 import { RefObject, useState } from 'react'
-import { LetterState } from '../utils/types'
+import { LetterState, WordState } from '../utils/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/store'
-import { changeLetterState } from '../slices/wordsSlice'
+import { RootState, store } from '../store/store'
+import {
+	changeLetterState,
+	changeWordState,
+	incrementWordIndex
+} from '../slices/wordsSlice'
 import { toggleGame, stopTimer, startTimer } from '../slices/gameStateSlice'
 import { LETTER_STATES } from '../utils/const'
 
@@ -17,9 +21,8 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 	const isTimerStart = useSelector(
 		(state: RootState) => state.gameState.isTimerStart
 	)
-
+	const wordPosition = useSelector((state: RootState) => state.words.wordIndex)
 	const [previousInput, setPreviousInput] = useState('')
-	const [wordPosition, setWordPosition] = useState<number>(0)
 	const [ctrlPressed, setCtrlPressed] = useState(false)
 
 	const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -34,7 +37,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		}
 	}
 
-	const changeState = (
+	const changeLetterStateHandler = (
 		wordIndex: number,
 		letterIndex: number,
 		newState: LetterState
@@ -48,11 +51,34 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		)
 	}
 
+	const changeWordStateHandler = (index: number, state: WordState) => {
+		dispatch(
+			changeWordState({
+				index: index,
+				state: state
+			})
+		)
+	}
+
+	const markWordState = () => {
+		const latestState = store.getState().words.letterState
+
+		const allLettersCorrect = latestState[wordPosition].every(
+			(item) => !item.includes('incorrect')
+		)
+
+		if (allLettersCorrect) {
+			changeWordStateHandler(wordPosition, 'correct typed')
+		} else {
+			changeWordStateHandler(wordPosition, 'incorrect typed')
+		}
+	}
+
 	const markIncompleteLettersAsIncorrect = (letterPosition: number) => {
 		if (letterPosition >= words[wordPosition].length) return
 
 		for (let i = letterPosition; i < words[wordPosition].length; i++) {
-			changeState(wordPosition, i, 'incorrect')
+			changeLetterStateHandler(wordPosition, i, 'incorrect')
 		}
 	}
 
@@ -62,20 +88,29 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 	}
 
 	const advanceToNextWord = () => {
-		setWordPosition((prev) => prev + 1)
+		dispatch(incrementWordIndex())
 	}
 
 	const markLastLetterState = (isCorrect: boolean) => {
 		const state = isCorrect ? LETTER_STATES.CORRECT : LETTER_STATES.INCORRECT
-		changeState(wordPosition, words[wordPosition].length - 1, state)
+		changeLetterStateHandler(
+			wordPosition,
+			words[wordPosition].length - 1,
+			state
+		)
 	}
 
 	const activateNextWord = () => {
-		changeState(wordPosition + 1, 0, LETTER_STATES.ACTIVE)
+		changeLetterStateHandler(wordPosition + 1, 0, LETTER_STATES.ACTIVE)
+		changeWordStateHandler(wordPosition + 1, 'active')
 	}
 
 	const activateNextLetter = (letterPosition: number) => {
-		changeState(wordPosition, letterPosition + 1, LETTER_STATES.ACTIVE)
+		changeLetterStateHandler(
+			wordPosition,
+			letterPosition + 1,
+			LETTER_STATES.ACTIVE
+		)
 	}
 
 	const handleEndGame = () => {
@@ -89,12 +124,16 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 
 		if (ctrlPressed) {
 			for (let i = letterDeleted; i >= 0; i--) {
-				changeState(wordPosition, i, LETTER_STATES.UNTYPED)
+				changeLetterStateHandler(wordPosition, i, LETTER_STATES.UNTYPED)
 			}
-			changeState(wordPosition, 0, LETTER_STATES.ACTIVE)
+			changeLetterStateHandler(wordPosition, 0, LETTER_STATES.ACTIVE)
 		} else {
-			changeState(wordPosition, currentPos, LETTER_STATES.ACTIVE)
-			changeState(wordPosition, currentPos + 1, LETTER_STATES.UNTYPED)
+			changeLetterStateHandler(wordPosition, currentPos, LETTER_STATES.ACTIVE)
+			changeLetterStateHandler(
+				wordPosition,
+				currentPos + 1,
+				LETTER_STATES.UNTYPED
+			)
 		}
 	}
 
@@ -103,20 +142,6 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		isLastActiveCorrect: boolean,
 		isEndGame: boolean
 	) => {
-		// const handleNoInput = (letterPosition: number) => {
-		// 	if (letterPosition != words[wordPosition].length) {
-		// 		for (let i = letterPosition; i < words[wordPosition].length; i++) {
-		// 			changeState(wordPosition, i, 'incorrect')
-		// 		}
-		// 	}
-		// }
-
-		// 	if (isLastActiveCorrect) {
-		// 	changeState(wordPosition, words[wordPosition].length - 1, 'correct')
-		// } else {
-		// 	changeState(wordPosition, words[wordPosition].length - 1, 'incorrect')
-		// }
-
 		markIncompleteLettersAsIncorrect(letterPosition)
 
 		resetInputField()
@@ -124,6 +149,8 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		advanceToNextWord()
 
 		markLastLetterState(isLastActiveCorrect)
+
+		markWordState()
 
 		if (isEndGame) {
 			handleEndGame()
@@ -141,16 +168,18 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 			? LETTER_STATES.CORRECT
 			: LETTER_STATES.INCORRECT
 
-		changeState(wordPosition, letterPosition, baseState)
+		changeLetterStateHandler(wordPosition, letterPosition, baseState)
 
 		if (isLastLetter) {
 			const lastState = isCorrect
 				? LETTER_STATES.LAST_CORRECT
 				: LETTER_STATES.LAST_INCORRECT
-			changeState(wordPosition, letterPosition, lastState)
+			changeLetterStateHandler(wordPosition, letterPosition, lastState)
 		}
 
-		activateNextLetter(letterPosition)
+		if (letterPosition < words[wordPosition].length - 1) {
+			activateNextLetter(letterPosition)
+		}
 	}
 
 	const onInputChange = (value: string) => {

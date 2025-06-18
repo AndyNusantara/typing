@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './store/store'
-import StatusComponent from './components/StatusComponent'
-import TypingComponent from './components/TypingComponent'
+import StatusComponent from './pages/status'
 import { resetTimer, toggleGame } from './slices/gameStateSlice'
 import { motion } from 'motion/react'
 
 import { AnimatePresence } from 'motion/react'
+import Home from './pages/home'
 
 const App = () => {
 	const isGameEnd = useSelector((state: RootState) => state.gameState.endGame)
@@ -39,7 +39,7 @@ const App = () => {
 							transition={{ duration: 0.15 }}
 							className="flex justify-center items-center"
 						>
-							<TypingComponent />
+							<Home />
 						</motion.div>
 					)}
 				</AnimatePresence>

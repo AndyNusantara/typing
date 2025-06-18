@@ -1,3 +1,5 @@
+import { ReactElement } from 'react'
+
 export type LetterState =
 	| 'correct'
 	| 'incorrect'
@@ -6,6 +8,31 @@ export type LetterState =
 	| 'active is-last correct'
 	| 'active is-last incorrect'
 
-export type TimerState = 60 | 30 | 20
+export type WordState =
+	| 'untyped'
+	| 'correct typed'
+	| 'incorrect typed'
+	| 'active'
 
-export type GameMode = 'countdown' | 'timer'
+export type ChangeLetterStatePayload = {
+	wordIndex: number
+	letterIndex: number
+	newState: LetterState
+}
+
+export type ChangeWordStatePayload = {
+	state: WordState
+	index: number
+}
+
+export type Parameter = 60 | 30 | 15
+
+export type GameMode = 'timer' | 'words'
+
+export type ToolsType = 'game-mode' | 'mode-parameter'
+
+export type Tools = {
+	component: ReactElement
+	key: string
+	type: ToolsType
+}

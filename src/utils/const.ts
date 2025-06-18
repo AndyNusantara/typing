@@ -10,6 +10,6 @@ export const LETTER_STATES = {
 }
 
 export const GAME_MODE = {
-	COUNTDOWN: 'countdown',
+	WORDS: 'words',
 	TIMER: 'timer'
 }

@@ -1,23 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { GameMode, TimerState } from '../utils/types'
-import { GAME_MODE } from '../utils/const'
+import { GameMode, Parameter } from '../utils/types'
 
 export interface gameState {
 	timer: number
 	isTimerStart: boolean
-	countdown: number
+	modeParameter: number
 	endGame: boolean
 	isBlur: boolean
-	gameMode: string
+	gameMode: GameMode
 }
 
 const initialState: gameState = {
 	timer: 0,
 	isTimerStart: false,
-	countdown: 60,
+	modeParameter: 60,
 	endGame: false,
 	isBlur: false,
-	gameMode: GAME_MODE.COUNTDOWN
+	gameMode: 'timer'
 }
 
 export const gameState = createSlice({
@@ -27,14 +26,17 @@ export const gameState = createSlice({
 		changeGameMode: (state, action: PayloadAction<GameMode>) => {
 			state.gameMode = action.payload
 		},
-		changeCountdown: (state, action: PayloadAction<TimerState>) => {
-			state.countdown = action.payload
+		changeModeParameter: (state, action: PayloadAction<Parameter>) => {
+			state.modeParameter = action.payload
 		},
 		incrementTimer: (state) => {
 			state.timer += 1
 		},
+		decrementTimer: (state) => {
+			state.timer -= 1
+		},
 		startCountdown: (state) => {
-			state.countdown -= 1
+			state.modeParameter -= 1
 		},
 		startTimer: (state) => {
 			state.isTimerStart = true
@@ -43,8 +45,11 @@ export const gameState = createSlice({
 			state.isTimerStart = false
 		},
 		resetTimer: (state) => {
-			state.timer = 0
+			state.timer = state.modeParameter
 			state.isTimerStart = false
+		},
+		setTimer: (state, action: PayloadAction<number>) => {
+			state.timer = action.payload
 		},
 		toggleGame: (state) => {
 			state.endGame = !state.endGame
@@ -56,11 +61,14 @@ export const gameState = createSlice({
 })
 
 export const {
-	changeCountdown,
+	changeGameMode,
+	changeModeParameter,
 	incrementTimer,
+	decrementTimer,
 	startTimer,
 	stopTimer,
 	resetTimer,
+	setTimer,
 	startCountdown,
 	toggleGame,
 	blur

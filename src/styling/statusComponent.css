@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+h1 {
+	font-size: 6rem;
+	margin: 0;
+	padding: 0;
+	color: var(--color-yellow-500);
+}
+
+h2 {
+	font-size: 3rem;
+	margin: 0;
+	padding: 0;
+}
+
+.suffix {
+	font-size: 3rem;
+	display: inline;
+	margin: 0;
+	padding: 0;
+}

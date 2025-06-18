@@ -5,7 +5,7 @@
 
 	&.active::before {
 		content: '|';
-		color: rgb(251, 255, 0);
+		color: var(--color-yellow-500);
 		font-size: 1.9rem;
 		position: absolute;
 		left: -29%;
