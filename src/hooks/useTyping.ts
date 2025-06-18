@@ -22,6 +22,8 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		(state: RootState) => state.gameState.isTimerStart
 	)
 	const wordPosition = useSelector((state: RootState) => state.words.wordIndex)
+	const timer = useSelector((state: RootState) => state.gameState.timer)
+	const gameMode = useSelector((state: RootState) => state.gameState.gameMode)
 	const [previousInput, setPreviousInput] = useState('')
 	const [ctrlPressed, setCtrlPressed] = useState(false)
 
@@ -194,8 +196,10 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		const isExtra = value.length > words[wordPosition].length && !isNextWord
 		const isLastLetter = value.length >= words[wordPosition].length
 		const isLastWord = words.length === wordPosition + 1
-		const isEndGame = (isLastWord && isLastLetter) || (isLastWord && isNextWord)
 		const hasTyped = isNextWord || inputRef.current?.value.trim() !== ''
+		const isWordModeEnd =
+			(isLastWord && isLastLetter) || (isLastWord && isNextWord)
+		const isTimerModeEnd = gameMode === 'timer' && timer === 0
 
 		setPreviousInput(value)
 
@@ -214,11 +218,11 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 		}
 
 		if (isNextWord) {
-			handleNextWord(letterPosition, isLastActiveCorrect, isEndGame)
+			handleNextWord(letterPosition, isLastActiveCorrect, isWordModeEnd)
 			return
 		}
 
-		if (isEndGame) {
+		if (isWordModeEnd || isTimerModeEnd) {
 			handleEndGame()
 			return
 		}

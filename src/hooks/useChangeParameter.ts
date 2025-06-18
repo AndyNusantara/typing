@@ -7,9 +7,7 @@ import useFocus from './useFocus'
 
 const useChangeParameter = () => {
 	const dispatch = useDispatch()
-	const activeModeParameter = useSelector(
-		(state: RootState) => state.gameState.modeParameter
-	)
+
 	const activeGameMode = useSelector(
 		(state: RootState) => state.gameState.gameMode
 	)
@@ -18,9 +16,10 @@ const useChangeParameter = () => {
 
 	const handleChangeGameParameter = (parameter: Parameter) => {
 		dispatch(changeModeParameter(parameter))
-		dispatch(setTimer(activeModeParameter))
+
 		if (activeGameMode === 'words') {
 			generate(parameter)
+			dispatch(setTimer(0))
 		} else {
 			focusInput()
 			dispatch(setTimer(parameter))

@@ -11,7 +11,7 @@ export interface gameState {
 }
 
 const initialState: gameState = {
-	timer: 0,
+	timer: 60,
 	isTimerStart: false,
 	modeParameter: 60,
 	endGame: false,

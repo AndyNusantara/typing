@@ -1,10 +1,9 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { RootState } from '../../store/store'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import useTyping from '../../hooks/useTyping'
 import { stopTimer } from '../../slices/gameStateSlice'
-import { LetterState } from '../../utils/types'
 import useFocus from '../../hooks/useFocus'
 
 import '../../styling/typingArea.css'
@@ -12,6 +11,7 @@ import { useGenerateWords } from '../../hooks/useGenerateWords'
 import Timer from './timer.component'
 import Button from '../button/button.component'
 import Blur from './blur.component'
+import WordList from './wordList.component'
 
 const TypingArea = () => {
 	const dispatch = useDispatch()
@@ -27,23 +27,6 @@ const TypingArea = () => {
 		words
 	})
 	const { generate } = useGenerateWords()
-
-	const getLetterState = useCallback((state: LetterState) => {
-		switch (state) {
-			case 'correct':
-				return 'letter text-slate-300'
-			case 'incorrect':
-				return 'letter text-red-500'
-			case 'active':
-				return 'letter active text-gray-500'
-			case 'active is-last correct':
-				return 'letter active is-last text-slate-300'
-			case 'active is-last incorrect':
-				return 'letter active is-last text-red-500'
-			default:
-				return 'letter text-gray-500'
-		}
-	}, [])
 
 	useEffect(() => {
 		generate(80)
@@ -64,26 +47,7 @@ const TypingArea = () => {
 						className="w-full overflow-hidden max-h-2/3"
 						onClick={focusInput}
 					>
-						<div className="flex flex-wrap gap-2 w-auto overflow-hidden">
-							{words.map((item, wordIndex) => {
-								return (
-									<span id={`word-${wordIndex}`} key={`word-${wordIndex}`}>
-										{item.split('').map((letter, index) => {
-											const state = letterState[wordIndex]?.[index] || 'untyped'
-
-											return (
-												<span
-													key={letter + index}
-													className={getLetterState(state as LetterState)}
-												>
-													{letter}
-												</span>
-											)
-										})}
-									</span>
-								)
-							})}
-						</div>
+						<WordList words={words} letterState={letterState} />
 						<input
 							ref={inputRef}
 							aria-label="input"
