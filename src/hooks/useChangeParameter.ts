@@ -22,6 +22,7 @@ const useChangeParameter = () => {
 			dispatch(setTimer(0))
 		} else {
 			focusInput()
+			generate()
 			dispatch(setTimer(parameter))
 		}
 	}

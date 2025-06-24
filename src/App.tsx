@@ -1,19 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from './store/store'
-import StatusComponent from './pages/status'
-import { resetTimer, toggleGame } from './slices/gameStateSlice'
+import Result from './pages/result'
 import { motion } from 'motion/react'
 
 import { AnimatePresence } from 'motion/react'
 import Home from './pages/home'
+import useRestartGame from './hooks/useRestartGame'
 
 const App = () => {
 	const isGameEnd = useSelector((state: RootState) => state.gameState.endGame)
-	const dispatch = useDispatch()
+	const { restartGame } = useRestartGame()
 
-	const toggleStatusComponent = () => {
-		dispatch(toggleGame())
-		dispatch(resetTimer())
+	const toggleResultComponent = () => {
+		restartGame()
 	}
 
 	return (
@@ -22,13 +21,13 @@ const App = () => {
 				<AnimatePresence mode="wait">
 					{isGameEnd ? (
 						<motion.div
-							key="status"
+							key="result"
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
 							transition={{ duration: 0.15 }}
 						>
-							<StatusComponent toggleStatusComponent={toggleStatusComponent} />
+							<Result toggleResultComponent={toggleResultComponent} />
 						</motion.div>
 					) : (
 						<motion.div

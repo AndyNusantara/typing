@@ -2,15 +2,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { useEffect } from 'react'
 import { decrementTimer, incrementTimer } from '../slices/gameStateSlice'
+import useEndGame from './useEndGame'
 
 const useTimer = () => {
 	const dispatch = useDispatch()
+	const { endGame } = useEndGame()
 	const isTimerStart = useSelector(
 		(state: RootState) => state.gameState.isTimerStart
 	)
 	const activeGameMode = useSelector(
 		(state: RootState) => state.gameState.gameMode
 	)
+	const timer = useSelector((state: RootState) => state.gameState.timer)
 
 	useEffect(() => {
 		if (!isTimerStart) return
@@ -28,7 +31,7 @@ const useTimer = () => {
 
 			return () => clearInterval(interval)
 		}
-	}, [isTimerStart, dispatch, activeGameMode])
+	}, [isTimerStart, dispatch, activeGameMode, timer, endGame])
 }
 
 export default useTimer

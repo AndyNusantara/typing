@@ -29,8 +29,10 @@ const TypingArea = () => {
 	const { generate } = useGenerateWords()
 
 	useEffect(() => {
-		generate(80)
-	}, [generate])
+		if (words.length === 0) {
+			generate(200)
+		}
+	}, [words, generate])
 
 	useEffect(() => {
 		if (!isFocus) {
@@ -42,11 +44,8 @@ const TypingArea = () => {
 		<div className="flex flex-col w-3/4">
 			<Timer />
 			<div className="flex flex-col gap-2 h-52">
-				<div className="relative h-52">
-					<div
-						className="w-full overflow-hidden max-h-2/3"
-						onClick={focusInput}
-					>
+				<div className="relative h-full">
+					<div className="w-full overflow-hidden max-h-32" onClick={focusInput}>
 						<WordList words={words} letterState={letterState} />
 						<input
 							ref={inputRef}
@@ -56,7 +55,7 @@ const TypingArea = () => {
 							onKeyUp={onKeyUp}
 							onBlur={blurInput}
 							onChange={(e) => onInputChange(e.target.value)}
-							className="absolute top-0 left-0 border-0 outline-hidden border-hidden opacity-0"
+							className="absolute top-0 left-0 w-0 h-0 border-0 outline-hidden border-hidden opacity-0"
 						/>
 						{!isFocus && <Blur />}
 					</div>
@@ -65,7 +64,7 @@ const TypingArea = () => {
 				<div className="flex justify-center items-center">
 					<Button
 						title="Re-generate words"
-						onClick={() => generate(100)}
+						onClick={() => generate()}
 						className="!bg-transparent border-none focus:!outline-0 hover:!border-none !transition-none"
 					>
 						<Icon

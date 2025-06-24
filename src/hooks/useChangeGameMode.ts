@@ -15,7 +15,7 @@ const useChangeGameMode = () => {
 		dispatch(changeGameMode(mode))
 
 		if (mode === 'timer') {
-			generate(100)
+			generate(200)
 			dispatch(setTimer(activeModeParameter))
 		} else {
 			generate(activeModeParameter)
