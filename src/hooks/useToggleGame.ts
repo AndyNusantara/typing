@@ -1,24 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { resetTimer, toggleGame } from '../slices/gameStateSlice'
-import { RootState } from '../store/store'
 import { useGenerateWords } from './useGenerateWords'
+import { RootState } from '../store/store'
 
-const useRestartGame = () => {
+const useToggleGame = () => {
 	const dispatch = useDispatch()
 	const { generate } = useGenerateWords()
 	const gameMode = useSelector((state: RootState) => state.gameState.gameMode)
+	const isGameEnded = useSelector((state: RootState) => state.gameState.endGame)
 
-	const restartGame = () => {
-		if (gameMode === 'words') {
-			generate()
-		} else {
-			generate(200)
+	const toggleGameState = () => {
+		if (isGameEnded) {
+			if (gameMode === 'words') {
+				generate()
+			} else {
+				generate(200)
+			}
 		}
 		dispatch(toggleGame())
 		dispatch(resetTimer())
 	}
 
-	return { restartGame }
+	return { toggleGameState }
 }
 
-export default useRestartGame
+export default useToggleGame

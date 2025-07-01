@@ -5,14 +5,14 @@ import { motion } from 'motion/react'
 
 import { AnimatePresence } from 'motion/react'
 import Home from './pages/home'
-import useRestartGame from './hooks/useRestartGame'
+import useToggleGame from './hooks/useToggleGame'
 
 const App = () => {
 	const isGameEnd = useSelector((state: RootState) => state.gameState.endGame)
-	const { restartGame } = useRestartGame()
+	const { toggleGameState } = useToggleGame()
 
 	const toggleResultComponent = () => {
-		restartGame()
+		toggleGameState()
 	}
 
 	return (

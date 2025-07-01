@@ -9,7 +9,7 @@ import {
 } from '../slices/wordsSlice'
 import { startTimer } from '../slices/gameStateSlice'
 import { LETTER_STATES } from '../utils/const'
-import useEndGame from './useEndGame'
+import useToggleGame from './useToggleGame'
 
 type useTypingProps = {
 	inputRef: RefObject<HTMLInputElement | null>
@@ -25,7 +25,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 	const wordPosition = useSelector((state: RootState) => state.words.wordIndex)
 	const timer = useSelector((state: RootState) => state.gameState.timer)
 	const gameMode = useSelector((state: RootState) => state.gameState.gameMode)
-	const { endGame } = useEndGame()
+	const { toggleGameState } = useToggleGame()
 	const [previousInput, setPreviousInput] = useState('')
 	const [ctrlPressed, setCtrlPressed] = useState(false)
 
@@ -118,7 +118,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 	}
 
 	const handleEndGame = () => {
-		endGame()
+		toggleGameState()
 		return
 	}
 
