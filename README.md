@@ -12,26 +12,21 @@ A sleek, responsive typing test application built with React, TypeScript, and Ta
   - Error count
 - **Interactive Keyboard**: 
   - Visual feedback for correct/incorrect keys
-  - Customizable keyboard themes
 - **Multiple Test Modes**:
-  - Timed tests (30s, 60s, 120s)
-  - Word count challenges (25, 50, 100 words)
-  - Quote typing mode
-- **Performance Dashboard**:
-  - Session history
-  - Progress charts
-  - Personal best tracking
+  - Timed tests (60s, 30s, 15s)
+  - Word count challenges (60, 30, 15 words)
 - **Customization**:
   - Dark/light mode
 
 ## 🛠️ Tech Stack
 
-| Category      | Technology          |
-|---------------|---------------------|
-| Frontend      | React + TypeScript  |
-| Styling       | Tailwind CSS        |
-| Animation     | Framer Motion       |
-| Build Tool    | Vite                |
+| Category         | Technology          |
+|------------------|---------------------|
+| Frontend         | React + TypeScript  |
+| State Management | Redux               |
+| Styling          | Tailwind CSS        |
+| Animation        | Framer Motion       |
+| Build Tool       | Vite                |
 
 ## 🚀 Quick Start
 
@@ -40,7 +35,7 @@ A sleek, responsive typing test application built with React, TypeScript, and Ta
    git clone https://github.com/AndyNusantara/typing.git
 2. Clone the repository:
    ```bash
-   cd react-typemaster
+   cd typing
    npm install
 3. Start the development server:
    ```bash
