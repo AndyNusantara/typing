@@ -5,7 +5,8 @@ import { RootState, store } from '../store/store'
 import {
 	changeLetterState,
 	changeWordState,
-	incrementWordIndex
+	incrementWordIndex,
+	setPreviousInput
 } from '../slices/wordsSlice'
 import { startTimer } from '../slices/gameStateSlice'
 import { LETTER_STATES } from '../utils/const'
@@ -25,8 +26,10 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 	const wordPosition = useSelector((state: RootState) => state.words.wordIndex)
 	const timer = useSelector((state: RootState) => state.gameState.timer)
 	const gameMode = useSelector((state: RootState) => state.gameState.gameMode)
+	const previousInput = useSelector(
+		(state: RootState) => state.words.previousInput
+	)
 	const { toggleGameState } = useToggleGame()
-	const [previousInput, setPreviousInput] = useState('')
 	const [ctrlPressed, setCtrlPressed] = useState(false)
 
 	const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -88,7 +91,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 
 	const resetInputField = () => {
 		if (inputRef.current) inputRef.current.value = ''
-		setPreviousInput('')
+		dispatch(setPreviousInput(''))
 	}
 
 	const advanceToNextWord = () => {

@@ -12,13 +12,15 @@ interface wordsState {
 	wordState: string[]
 	wordIndex: number
 	letterState: string[][]
+	previousInput: string
 }
 
 const initialState: wordsState = {
 	words: [],
 	wordState: [],
 	wordIndex: 0,
-	letterState: []
+	letterState: [],
+	previousInput: ''
 }
 
 export const wordsSlice = createSlice({
@@ -55,6 +57,12 @@ export const wordsSlice = createSlice({
 		},
 		resetWordIndex: (state) => {
 			state.wordIndex = 0
+		},
+		setPreviousInput: (state, action: PayloadAction<string>) => {
+			state.previousInput = action.payload
+		},
+		resetPreviousInput: (state) => {
+			state.previousInput = ''
 		}
 	}
 })
@@ -64,7 +72,9 @@ export const {
 	changeLetterState,
 	changeWordState,
 	incrementWordIndex,
-	resetWordIndex
+	resetWordIndex,
+	setPreviousInput,
+	resetPreviousInput
 } = wordsSlice.actions
 
 export default wordsSlice.reducer

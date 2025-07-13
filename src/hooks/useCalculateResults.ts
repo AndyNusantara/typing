@@ -24,8 +24,6 @@ const useCalculateResults = () => {
 
 	const { correctLetters, incorrectLetters } = calculate()
 
-	console.log(correctLetters, incorrectLetters)
-
 	const getTime = () => {
 		if (gameMode === 'words') {
 			return timer
@@ -42,8 +40,6 @@ const useCalculateResults = () => {
 		totalLetters > 0 ? Math.round((correctLetters / totalLetters) * 100) : 0
 
 	const characters = { correctLetters, incorrectLetters }
-
-	console.log(correctLetters, incorrectLetters)
 
 	return {
 		wpm,
