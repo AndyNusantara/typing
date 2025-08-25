@@ -205,7 +205,7 @@ const useTyping = ({ inputRef, words }: useTypingProps) => {
 			(isLastWord && isLastLetter) || (isLastWord && isNextWord)
 		const isTimerModeEnd = gameMode === 'timer' && timer === 0
 
-		setPreviousInput(value)
+		dispatch(setPreviousInput(value))
 
 		if (!isTimerStart && hasTyped) {
 			dispatch(startTimer())

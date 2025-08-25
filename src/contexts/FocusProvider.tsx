@@ -7,7 +7,6 @@ const FocusProvider = ({ children }: { children: ReactNode }) => {
 
 	const focusInput = useCallback(() => {
 		inputRef.current?.focus()
-		inputRef.current?.select()
 		setIsFocus(true)
 	}, [])
 
